@@ -11,14 +11,15 @@ double u_next(double c, double dt, double dx, double u_presente, double u_tanter
 
 int main(){
   double c = 0.1;
-  double dx = 0.001;
-  double dt = 0.01;
+  double dx = 0.0001;
+  double dt = 0.001;
   double L = 1;
   double pi = 3.14159265359;
   int n_x = L/dx + 1;
 
   double *u_ant = new double[n_x];
   double *u_pres = new double[n_x];
+  double *u_inicial = new double[n_x];
   double *u = new double[n_x];
   double *x = new double[n_x];
 
@@ -26,9 +27,11 @@ int main(){
     x[i] = i*dx;
     if((i == 0) || (i == n_x -1)){
       u_ant[i] = 0;
+      u_inicial[i] = 0;
     }
     else{
     u_ant[i] = sin(x[i]*2*pi);
+    u_inicial[i] = u_ant[i];
     }
   }
   for(int i = 0; i<n_x;i++){
@@ -40,12 +43,13 @@ int main(){
     }
   }
 
-   for(int i = 0; i<n_x;i++){
-     cout << x[i] << " " << u_ant[i] << endl;
-    }
-
   int j = 1;
-
+  int j_1 = 0;
+  int j_2 = 0;
+  double *u_1 = new double[n_x];
+  double *u_2 = new double[n_x];
+  double *u_3 = new double[n_x];
+  
   while(u_pres[n_x/4] > -0.99){
    
     for(int i = 0; i<n_x;i++){
@@ -57,19 +61,19 @@ int main(){
       }
     }
 
-    if((u_ant[n_x/4] > 0.4999) && (u[n_x/4] < 0.49)){
-      cout << j << " " << j*dt << endl;
+    if((u_ant[n_x/4] > 0.5) && (u_pres[n_x/4] < 0.5)){
+       j_1 = j; 
       for(int i = 0; i<n_x;i++){
-	cout << x[i] << " " << u_pres[i] << endl;
+	u_1[i] = u_pres[i];
       }
     }
 
     if((u_ant[n_x/4] > -0.5) && (u[n_x/4] < -0.5)){
-      cout << j << " " << j*dt << endl;
+       j_2 = j; 
       for(int i = 0; i<n_x;i++){
-	cout << x[i] << " " << u_pres[i] << endl;
+	u_2[i] = u_pres[i];
       }
-      }
+     }
 
     for(int i = 0; i<n_x;i++){
       u_ant[i] = u_pres[i];
@@ -80,9 +84,10 @@ int main(){
     
   }
 
-  cout << j << " " << j*dt << endl;
+  cout << 0 << " " << 0 << " " << j_1 << " "  << j_2 << " "<< j << endl;
+  
    for(int i = 0; i<n_x;i++){
-     cout << x[i] << " " << u[i] << endl;
+     cout << x[i] << " " << u_inicial[i] << " " << u_1[i] << " " << u_2[i] << " " << u[i] <<  endl;
     }
 
   return 0;
